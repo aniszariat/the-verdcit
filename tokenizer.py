@@ -6,7 +6,7 @@ Created on Tue Jan 13 21:30:36 2026
 """
 
 import re
-class SimpleTokenizerV1:
+class SimpleTokenizerV2:
     def __init__(self, vocab):
         #1 Stores the vocabulary as a class attribute for access in the encode and decode methods
         self.str_to_int = vocab #1

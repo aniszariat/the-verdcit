@@ -6,6 +6,7 @@ Created on Fri Jan  2 19:45:42 2026
 """
 
 import re
+import tokenizer
 with open("the-verdict.txt", "r", encoding="utf-8") as f:
     raw_text = f.read()
 print("Total number of character:", len(raw_text))
@@ -21,22 +22,28 @@ print("number of tokens:",len(preprocessed))
 # print(preprocessed[:30])
 
 """
+we add an <|unk|> token to represent new and unknown words that were not part of the training data and thus not part of the existing vocabulary. 
+we add an <|endoftext|> token that we can use to separate two unrelated text sources.
+"""
+preprocessed.extend(["<|endoftext|>", "<|unk|>"])
+"""
 let’s create a list of all unique tokens and sort them alphabetically
 to determine the vocabulary size:
 """
 all_words = sorted(set(preprocessed))
 vocab_size = len(all_words)
+#print("all words:\n",all_words)
 print("vocabulary size:",vocab_size)
 
 
 # we create the vocabulary and print its first 51 entries
 vocab = {token:integer for integer,token in enumerate(all_words)}
-for i, item in enumerate(vocab.items()):
+for i, item in enumerate(list(vocab.items())[:15]):
     print(item)
     if i >= 50:
         break
 
-tokenizer = tokenizer.SimpleTokenizerV1(vocab)
+tokenizer = tokenizer.SimpleTokenizerV2(vocab)
 
 #text = """"It's the last he painted, you know,"
 #Mrs. Gisburn said with pardonable pride."""
