@@ -35,3 +35,18 @@ for i, item in enumerate(vocab.items()):
     print(item)
     if i >= 50:
         break
+
+tokenizer = tokenizer.SimpleTokenizerV1(vocab)
+
+#text = """"It's the last he painted, you know,"
+#Mrs. Gisburn said with pardonable pride."""
+
+#text = "Hello, do you like tea?"
+
+text1 = "Hello, do you like tea?"
+text2 = "In the sunlit terraces of the palace."
+text = " <|endoftext|> ".join((text1, text2))
+print(text)
+ids = tokenizer.encode(text)
+print(ids)
+print(tokenizer.decode(ids))
