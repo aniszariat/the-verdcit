@@ -7,7 +7,9 @@ Created on Fri Jan  2 19:45:42 2026
 
 import re
 import tiktoken
-
+import dataLoaderProcess as dlp
+print("*****")
+print("Tokenizing text")
 with open("the-verdict.txt", "r", encoding="utf-8") as f:
     raw_text = f.read()
 print("Total number of character:", len(raw_text))
@@ -16,9 +18,11 @@ print("Total number of character:", len(raw_text))
 """
 splits text into individual words and punctuation characters
 """ 
+
 preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', raw_text)
 preprocessed = [item.strip() for item in preprocessed if item.strip()]
 # This print statement outputs 4690, which is the number of tokens in this text (without whitespaces)
+
 print("number of tokens:",len(preprocessed))
 
 # print the 1st 30 token from the list
@@ -41,15 +45,59 @@ print("vocabulary size:",vocab_size)
 # we create the vocabulary and print its first 51 entries
 vocab = {token:integer for integer,token in enumerate(all_words)}
 
-text = (
-        "Hello, do you like tea? <|endoftext|> In the sunlit terraces"
-        "of someunknownPlace."
-)
+print("\n\n*****")
+print("Byte pair encoding")
 """
 instantiate the BPE tokenizer fromtiktoken as follows:
 """
 tokenizer = tiktoken.get_encoding("gpt2")
-print(text)
-ids = tokenizer.encode(text, allowed_special={"<|endoftext|>"})
-print(ids)
-print(tokenizer.decode(ids))
+
+# Data sampling with a sliding window
+print("\n\n*****")
+print("Data sampling with a sliding window")
+
+"""
+Let’s implement a data loader that fetches the input–target
+pairs from the training dataset using a sliding
+window approach. 
+"""
+"""
+we will tokenize the whole “The Verdict” short story using the BPE tokenizer:
+"""
+"""
+with open("the-verdict.txt", "r", encoding="utf-8") as f:
+    raw_text = f.read()
+enc_text = tokenizer.encode(raw_text)
+print("BPE tokens: ",len(enc_text))
+"""
+with open("the-verdict.txt", "r", encoding="utf-8") as f:
+    raw_text = f.read()
+""""""
+
+dataloader = dlp.DataLoaderClass.create_dataloader_v1(
+    raw_text,
+    batch_size=1, 
+    max_length=4, 
+    stride=2, 
+    shuffle=False)
+data_iter = iter(dataloader)
+#1
+first_batch = next(data_iter)
+print(first_batch)
+#1 Converts dataloader into a Python iterator to fetch the next entry via Python’s built-in next() function
+
+second_batch = next(data_iter)
+print(second_batch)
+
+"""
+Let’s look briefly at how we can use the data loader to sample with a batch size greater than 1:
+"""
+"""
+dataloader = dlp.DataLoaderClass.create_dataloader_v1(
+    raw_text, batch_size=8, max_length=4, stride=4,
+    shuffle=False)
+data_iter = iter(dataloader)
+inputs, targets = next(data_iter)
+print("Inputs:\n", inputs)
+print("\nTargets:\\n", targets)
+"""
