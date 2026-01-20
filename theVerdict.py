@@ -8,6 +8,8 @@ Created on Fri Jan  2 19:45:42 2026
 import re
 import tiktoken
 import dataLoaderProcess as dlp
+import torch
+
 print("*****")
 print("Tokenizing text")
 with open("the-verdict.txt", "r", encoding="utf-8") as f:
@@ -75,8 +77,11 @@ with open("the-verdict.txt", "r", encoding="utf-8") as f:
 """"""
 
 max_length = 4
+vocab_size = 50257
+output_dim = 256
+token_embedding_layer = torch.nn.Embedding(vocab_size, output_dim)
 
-
+# instantiate the data loader
 dataloader = dlp.DataLoaderClass.create_dataloader_v1(
     raw_text,
     batch_size=8, 
@@ -108,4 +113,8 @@ print("\nTargets:\\n", targets)
 """
 inputs, targets = next(data_iter)
 print("Token IDs:\n", inputs)
-print("\nInputs shape:\\n", inputs.shape)
+print("\nInputs shape: ", inputs.shape)
+
+# use the embedding layer to embed these token IDs into 256-dimensional vectors:
+token_embeddings = token_embedding_layer(inputs)
+print("Token embeddings shape:",token_embeddings.shape)
