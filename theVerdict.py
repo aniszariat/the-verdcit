@@ -117,4 +117,13 @@ print("\nInputs shape: ", inputs.shape)
 
 # use the embedding layer to embed these token IDs into 256-dimensional vectors:
 token_embeddings = token_embedding_layer(inputs)
-print("Token embeddings shape:",token_embeddings.shape)
+print("Token embeddings shape: ",token_embeddings.shape)
+
+# create another embedding layer that has the same embedding dimension as the token_embedding_ layer
+context_length = max_length
+pos_embedding_layer = torch.nn.Embedding(context_length, output_dim)
+pos_embeddings = pos_embedding_layer(torch.arange(context_length))
+print("Position embeddings shape: ",pos_embeddings.shape)
+
+input_embeddings = token_embeddings + pos_embeddings
+print(input_embeddings.shape)
