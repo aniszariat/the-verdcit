@@ -74,13 +74,17 @@ with open("the-verdict.txt", "r", encoding="utf-8") as f:
     raw_text = f.read()
 """"""
 
+max_length = 4
+
+
 dataloader = dlp.DataLoaderClass.create_dataloader_v1(
     raw_text,
-    batch_size=1, 
-    max_length=4, 
-    stride=2, 
+    batch_size=8, 
+    max_length=max_length, 
+    stride=max_length, 
     shuffle=False)
 data_iter = iter(dataloader)
+"""
 #1
 first_batch = next(data_iter)
 print(first_batch)
@@ -88,6 +92,7 @@ print(first_batch)
 
 second_batch = next(data_iter)
 print(second_batch)
+"""
 
 """
 Let’s look briefly at how we can use the data loader to sample with a batch size greater than 1:
@@ -101,3 +106,6 @@ inputs, targets = next(data_iter)
 print("Inputs:\n", inputs)
 print("\nTargets:\\n", targets)
 """
+inputs, targets = next(data_iter)
+print("Token IDs:\n", inputs)
+print("\nInputs shape:\\n", inputs.shape)
