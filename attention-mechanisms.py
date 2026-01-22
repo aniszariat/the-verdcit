@@ -47,6 +47,7 @@ print("attention scores using matrix multiplication:")
 3 compute context vecotrs
 """
 
+"""
 # In step 1, we add an additional for loop to compute the dot products for all pairs of inputs.
 attn_scores = inputs @ inputs.T 
 print("1 compute attention socres")
@@ -61,3 +62,26 @@ print(attn_weights)
 all_context_vecs = attn_weights @ inputs
 print("3 compute context vecotrs")
 print(all_context_vecs)
+"""
+
+# Implementing self-attention with trainable weights
+
+#1 The second input element
+x_2 = inputs[1]
+#2 The input embedding size, d=3
+d_in = inputs.shape[1]
+#3 The output embedding size, d_out=2
+d_out = 2
+
+
+# we initialize the three weight matrices Wq, Wk, and Wv
+torch.manual_seed(123)
+W_query = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_key = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_value = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+
+# we compute the query, key, and value vectors:
+query_2 = x_2 @ W_query
+key_2 = x_2 @ W_key
+value_2 = x_2 @ W_value
+print(query_2)  # ===> tensor([0.4306, 1.4551])
