@@ -12,6 +12,7 @@ matrix_embedding_layer = [
 
 inputs = torch.tensor(matrix_embedding_layer)
 
+"""
 query = inputs[1]
 # 1:  The second input token serves as the query.
 attn_scores_2 = torch.empty(inputs.shape[0])
@@ -27,3 +28,36 @@ context_vec_2 = torch.zeros(query.shape)
 for i, x_i in enumerate(inputs):
     context_vec_2 += attn_weights_2[i] * x_i
 print(context_vec_2) # ===> tensor([0.4419, 0.6515, 0.5683])
+"""
+
+""" 
+print("attention scores using for loops:")
+attn_scores = torch.empty(6, 6)
+for i, x_i in enumerate(inputs):
+    for j, x_j in enumerate(inputs):
+        attn_scores[i, j] = torch.dot(x_i, x_j)
+print(attn_scores)
+print("\n***\n")
+print("attention scores using matrix multiplication:")
+"""
+
+""" 
+1 compute attention socres
+2 compute attention weights
+3 compute context vecotrs
+"""
+
+# In step 1, we add an additional for loop to compute the dot products for all pairs of inputs.
+attn_scores = inputs @ inputs.T 
+print("1 compute attention socres")
+print(attn_scores)
+
+# In step 2, we normalize each row so that the values in each row sum to 1:
+attn_weights = torch.softmax(attn_scores, dim=-1)
+print("2 compute attention weights")
+print(attn_weights)
+
+# In step 3, we use these attention weights to compute all context vectors via matrix multiplication:
+all_context_vecs = attn_weights @ inputs
+print("3 compute context vecotrs")
+print(all_context_vecs)
