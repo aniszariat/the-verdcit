@@ -90,14 +90,29 @@ print("W_value:\n",W_value)
 
 """
 # we compute the query, key, and value vectors:
+"""
 query_2 = x_2 @ W_query
 key_2 = x_2 @ W_key
 value_2 = x_2 @ W_value
 print(query_2)  # ===> tensor([0.4306, 1.4551])
-"""
 
 # We can obtain all keys and values via matrix multiplication:
 keys = inputs @ W_key
 values = inputs @ W_value
 print("keys.shape:", keys.shape)
 print("values.shape:", values.shape)
+
+""" 
+# let’s compute the attention score ω22: Remember that Python starts indexing at 0.
+"""
+print("keys:")
+print(keys)
+keys_2 = keys[1]
+attn_score_22 = query_2.dot(keys_2)
+print(attn_score_22) # ===> tensor(1.8524)
+""" 
+# we can generalize this computation to all attention scores via matrix multiplication:
+# All attention scores for given query
+"""
+attn_scores_2 = query_2 @ keys.T
+print(attn_scores_2) # ===> tensor([1.2705, 1.8524, 1.8111, 1.0795, 0.5577, 1.5440])
