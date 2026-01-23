@@ -11,8 +11,10 @@ matrix_embedding_layer = [
 
 
 inputs = torch.tensor(matrix_embedding_layer)
+"""
 print("inputs:")
 print(inputs)
+"""
 
 """
 query = inputs[1]
@@ -94,13 +96,14 @@ print("W_value:\n",W_value)
 query_2 = x_2 @ W_query
 key_2 = x_2 @ W_key
 value_2 = x_2 @ W_value
-print(query_2)  # ===> tensor([0.4306, 1.4551])
+# print(query_2)  # ===> tensor([0.4306, 1.4551])
 
 # We can obtain all keys and values via matrix multiplication:
 keys = inputs @ W_key
 values = inputs @ W_value
-print("keys.shape:", keys.shape)
-print("values.shape:", values.shape)
+quries = inputs @ W_query
+# print("keys.shape:", keys.shape)
+# print("values.shape:", values.shape)
 
 """ 
 # let’s compute the attention score ω22: Remember that Python starts indexing at 0.
@@ -109,10 +112,46 @@ print("keys:")
 print(keys)
 keys_2 = keys[1]
 attn_score_22 = query_2.dot(keys_2)
-print(attn_score_22) # ===> tensor(1.8524)
+# print(attn_score_22) # ===> tensor(1.8524)
 """ 
 # we can generalize this computation to all attention scores via matrix multiplication:
 # All attention scores for given query
 """
 attn_scores_2 = query_2 @ keys.T
+print("attention scores 2:")
 print(attn_scores_2) # ===> tensor([1.2705, 1.8524, 1.8111, 1.0795, 0.5577, 1.5440])
+"""
+We compute the attention weights by scaling the attention scores and
+using the softmax function. However, now we scale the
+attention scores by dividing them by the square root of the
+embedding dimension of the keys
+"""
+
+d_k = keys.shape[-1]
+# print("d_k: ",d_k)
+attn_weights_2 = torch.softmax(attn_scores_2 / d_k**0.5, dim=-1)
+print("attention weights 2:")
+print(attn_weights_2) # ===> tensor([0.1500, 0.2264, 0.2199, 0.1311, 0.0906, 0.1820])
+
+context_vec_2 = attn_weights_2 @ values
+print("context vector 2:")
+print(context_vec_2) # ====> tensor([0.3061, 0.8210])
+
+# compute all context vectors
+
+# 1: compute all attention socres
+attn_scores = quries @ keys.T
+print("attention scores:")
+print(attn_scores)
+
+# 2: compute all attention weights
+
+attn_weights = torch.softmax(attn_scores / d_k**0.5, dim=-1)
+print("attention weights:")
+print(attn_weights)
+
+# 3: compute all context vectors
+context_vectors = attn_weights @ values
+print("context vectors:")
+print(context_vectors)
+
