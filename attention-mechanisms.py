@@ -11,6 +11,8 @@ matrix_embedding_layer = [
 
 
 inputs = torch.tensor(matrix_embedding_layer)
+print("inputs:")
+print(inputs)
 
 """
 query = inputs[1]
@@ -80,8 +82,22 @@ W_query = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
 W_key = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
 W_value = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
 
+""" 
+print("W_query:\n",W_query)
+print("W_key:\n",W_key)
+print("W_value:\n",W_value)
+"""
+
+"""
 # we compute the query, key, and value vectors:
 query_2 = x_2 @ W_query
 key_2 = x_2 @ W_key
 value_2 = x_2 @ W_value
 print(query_2)  # ===> tensor([0.4306, 1.4551])
+"""
+
+# We can obtain all keys and values via matrix multiplication:
+keys = inputs @ W_key
+values = inputs @ W_value
+print("keys.shape:", keys.shape)
+print("values.shape:", values.shape)
