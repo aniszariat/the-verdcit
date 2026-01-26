@@ -2,6 +2,7 @@ import torch
 from selfAttentionClass import SelfAttention_v2
 from causalAttentionClass import CausalAttention
 from causalAttentionClass import MultiHeadAttentionWrapper
+from multiHeadAttentionClass import MultiHeadAttention
 
 torch.manual_seed(789)
 matrix_embedding_layer = [
@@ -68,10 +69,26 @@ print("context_vecs.shape:", context_vecs.shape)
 
 
 # we can use the MultiHeadAttentionWrapper class similar to the CausalAttention class before:
+""" 
 torch.manual_seed(123)
 context_length = batch.shape[1]  # This is the number of tokens
 d_in, d_out = 3, 2
 mha = MultiHeadAttentionWrapper(d_in, d_out, context_length, 0.0, num_heads=2)
+context_vecs = mha(batch)
+print(context_vecs)
+print("context_vecs.shape:", context_vecs.shape)
+"""
+
+
+# The MultiHeadAttention class can be used similar to the SelfAttention and CausalAttention classes we implemented earlier:
+""" 
+We have now implemented the MultiHeadAttention class that
+we will use when we implement and train the LLM
+"""
+torch.manual_seed(123)
+batch_size, context_length, d_in = batch.shape
+d_out = 2
+mha = MultiHeadAttention(d_in, d_out, context_length, 0.0, num_heads=2)
 context_vecs = mha(batch)
 print(context_vecs)
 print("context_vecs.shape:", context_vecs.shape)
