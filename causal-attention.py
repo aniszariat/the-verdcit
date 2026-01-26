@@ -34,8 +34,8 @@ context_length = attn_scores.shape[0]
 # We can implement this more efficient masking “trick”
 mask = torch.triu(torch.ones(context_length, context_length), diagonal=1)
 masked = attn_scores.masked_fill(mask.bool(), -torch.inf)
-print("masked:")
-print(masked)
+# print("masked:")
+# print(masked)
 
 # the modified attention weights
 attn_weights = torch.softmax(masked / keys.shape[-1] ** 0.5, dim=1)
@@ -43,3 +43,9 @@ print("the modified attention weights:")
 print(attn_weights)
 
 # # # Masking additional attention weights with dropout
+
+torch.manual_seed(123)
+# We choose a dropout rate of 50%.
+dropout = torch.nn.Dropout(0.5)
+print("dropout:")
+print(dropout(attn_weights))
