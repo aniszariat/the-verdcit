@@ -1,7 +1,8 @@
 import tiktoken
 import torch
-from DummyGPTModelClass import DummyGPTModel
 import torch.nn as nn
+from DummyGPTModelClass import DummyGPTModel
+from layerNormalizationClass import LayerNorm
 
 # The configuration of the small GPT-2 model via the following Python dictionary:
 GPT_CONFIG_124M = {
@@ -36,10 +37,11 @@ print(logits)
 torch.manual_seed(123)
 batch_example = torch.randn(2, 5)
 # 1 Creates two training examples with five dimensions (features) each
-layer = nn.Sequential(nn.Linear(5, 6), nn.ReLU())
-out = layer(batch_example)
-print(out)
+# layer = nn.Sequential(nn.Linear(5, 6), nn.ReLU())
+# out = layer(batch_example)
+# print(out)
 
+""" 
 # let’s examine the mean and variance:
 mean = out.mean(dim=-1, keepdim=True)
 var = out.var(dim=-1, keepdim=True)
@@ -53,5 +55,14 @@ var = out_norm.var(dim=-1, keepdim=True)
 print("Normalized layer outputs:\n", out_norm)
 # To improve readability, we can also turn off the scientific notation when printing tensor values by setting sci_mode to False:
 torch.set_printoptions(sci_mode=False)
+print("Mean:\n", mean)
+print("Variance:\n", var)
+ """
+
+# try the LayerNorm module in practice
+ln = LayerNorm(emb_dim=5)
+out_ln = ln(batch_example)
+mean = out_ln.mean(dim=-1, keepdim=True)
+var = out_ln.var(dim=-1, unbiased=False, keepdim=True)
 print("Mean:\n", mean)
 print("Variance:\n", var)
