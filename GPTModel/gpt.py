@@ -1,5 +1,6 @@
 import tiktoken
 import torch
+from DummyGPTModelClass import DummyGPTModel
 
 # The configuration of the small GPT-2 model via the following Python dictionary:
 GPT_CONFIG_124M = {
@@ -22,3 +23,9 @@ batch.append(torch.tensor(tokenizer.encode(txt2)))
 batch = torch.stack(batch, dim=0)
 print(batch)
 
+# we initialize a new 124-million-parameter DummyGPTModel instance and feed it the tokenized batch:
+torch.manual_seed(123)
+model = DummyGPTModel(GPT_CONFIG_124M)
+logits = model(batch)
+print("Output shape:", logits.shape)
+print(logits)
