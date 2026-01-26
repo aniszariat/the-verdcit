@@ -18,9 +18,11 @@ sa_v2 = SelfAttention_v2(d_in, d_out)
 queries = sa_v2.W_query(inputs)
 keys = sa_v2.W_key(inputs)
 attn_scores = queries @ keys.T
-attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
-print("attention weights 1:")
-print(attn_weights)
+# attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
+# print("attention weights 1:")
+# print(attn_weights)
+
+# # # Applying a causal attention mask
 """
 The softmax function converts its inputs into a probability
 distribution. When negative infinity values (-∞) are present
@@ -37,5 +39,7 @@ print(masked)
 
 # the modified attention weights
 attn_weights = torch.softmax(masked / keys.shape[-1] ** 0.5, dim=1)
-print("attention weights 2:")
+print("the modified attention weights:")
 print(attn_weights)
+
+# # # Masking additional attention weights with dropout
