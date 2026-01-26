@@ -43,5 +43,15 @@ print(out)
 # let’s examine the mean and variance:
 mean = out.mean(dim=-1, keepdim=True)
 var = out.var(dim=-1, keepdim=True)
+# print("Mean:\n", mean)
+# print("Variance:\n", var)
+
+# let’s apply layer normalization to the layer outputs we obtained earlier.
+out_norm = (out - mean) / torch.sqrt(var)
+mean = out_norm.mean(dim=-1, keepdim=True)
+var = out_norm.var(dim=-1, keepdim=True)
+print("Normalized layer outputs:\n", out_norm)
+# To improve readability, we can also turn off the scientific notation when printing tensor values by setting sci_mode to False:
+torch.set_printoptions(sci_mode=False)
 print("Mean:\n", mean)
 print("Variance:\n", var)
