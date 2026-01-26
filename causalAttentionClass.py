@@ -1,3 +1,6 @@
+import torch.nn as nn
+import torch
+
 """
 A compact causal attention class
 """

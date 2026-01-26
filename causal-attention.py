@@ -1,5 +1,6 @@
 import torch
 from selfAttentionClass import SelfAttention_v2
+from causalAttentionClass import CausalAttention
 
 torch.manual_seed(789)
 matrix_embedding_layer = [
@@ -43,9 +44,19 @@ print("the modified attention weights:")
 print(attn_weights)
 
 # # # Masking additional attention weights with dropout
-
+""" 
 torch.manual_seed(123)
 # We choose a dropout rate of 50%.
 dropout = torch.nn.Dropout(0.5)
 print("dropout:")
 print(dropout(attn_weights))
+"""
+# Two inputs with six tokens each; each token has embedding dimension 3
+batch = torch.stack((inputs, inputs), dim=0)
+# print(batch.shape)
+torch.manual_seed(123)
+context_length = batch.shape[1]
+# We can use the CausalAttention class, similar to SelfAttention previously
+ca = CausalAttention(d_in, d_out, context_length, 0.0)
+context_vecs = ca(batch)
+print("context_vecs.shape:", context_vecs.shape)
