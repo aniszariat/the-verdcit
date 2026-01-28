@@ -1,9 +1,12 @@
 import tiktoken
 import torch
-import torch.nn as nn
+# import torch.nn as nn
 # from DummyGPTModelClass import DummyGPTModel
-from layerNormalizationClass import LayerNorm
+# from layerNormalizationClass import LayerNorm
 # from gpt_config import GPT_CONFIG_124M
+from GPTModelClass import GPTModel
+from gpt_config import GPT_CONFIG_124M
+
 
 # we tokenize a batch consisting of two text inputs for the GPT model using the tiktoken tokenizer
 tokenizer = tiktoken.get_encoding("gpt2")
@@ -13,7 +16,7 @@ txt2 = "Every day holds a"
 batch.append(torch.tensor(tokenizer.encode(txt1)))
 batch.append(torch.tensor(tokenizer.encode(txt2)))
 batch = torch.stack(batch, dim=0)
-print("batch:\n",batch)
+# print("batch:\n",batch)
 
 # we initialize a new 124-million-parameter DummyGPTModel instance and feed it the tokenized batch:
 """ 
@@ -49,6 +52,7 @@ print("Mean:\n", mean)
 print("Variance:\n", var)
  """
 
+""" 
 # try the LayerNorm module in practice
 ln = LayerNorm(emb_dim=5)
 out_ln = ln(batch_example)
@@ -56,3 +60,12 @@ mean = out_ln.mean(dim=-1, keepdim=True)
 var = out_ln.var(dim=-1, unbiased=False, keepdim=True)
 print("Mean:\n",mean)
 print("Variance:\n",var)
+ """
+
+# Let’s now initialize the 124-million-parameter GPT model using the GPT_CONFIG_ 124M dictionary 
+torch.manual_seed(123)
+model = GPTModel(GPT_CONFIG_124M)
+out = model(batch)
+print("Input batch:\n", batch)
+print("\nOutput shape:", out.shape)
+print(out)
