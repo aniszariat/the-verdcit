@@ -1,5 +1,6 @@
 import tiktoken
 import torch
+
 # import torch.nn as nn
 # from DummyGPTModelClass import DummyGPTModel
 # from layerNormalizationClass import LayerNorm
@@ -62,10 +63,31 @@ print("Mean:\n",mean)
 print("Variance:\n",var)
  """
 
-# Let’s now initialize the 124-million-parameter GPT model using the GPT_CONFIG_ 124M dictionary 
+# Let’s now initialize the 124-million-parameter GPT model using the GPT_CONFIG_ 124M dictionary
 torch.manual_seed(123)
 model = GPTModel(GPT_CONFIG_124M)
 out = model(batch)
 print("Input batch:\n", batch)
 print("\nOutput shape:", out.shape)
 print(out)
+
+# Using the numel() method, short for “number of elements,” we can collect the total number of parameters in the model’s parameter tensors:
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Total number of parameters: {total_params:,}")
+
+# let’s take a look at the shapes of the token embedding layer and linear output layer that we initialized on the model via the GPTModel earlier:
+print("Token embedding layer shape:", model.tok_emb.weight.shape)
+print("Output layer shape:", model.out_head.weight.shape)
+# Let’s remove the output layer parameter count from the total GPT-2 model count according to the weight tying:
+total_params_gpt2 = total_params - sum(p.numel() for p in model.out_head.parameters())
+print(
+    f"Number of trainable parameters "
+    f"considering weight tying: {total_params_gpt2:,}"
+)
+
+# let’s compute the memory requirements of the 163 million parameters in our GPTModel object
+#1 Calculates the total size in bytes (assuming float32, 4 bytes per parameter)
+total_size_bytes = total_params * 4
+#2 Converts to megabytes
+total_size_mb = total_size_bytes / (1024 * 1024)
+print(f"Total size of the model: {total_size_mb:.2f} MB")
