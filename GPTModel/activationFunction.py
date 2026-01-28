@@ -1,6 +1,21 @@
 import torch
 import torch.nn as nn
 
+
+# A feed forward neural network module
+class FeedForward(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(cfg["emb_dim"], 4 * cfg["emb_dim"]),
+            GELU(),
+            nn.Linear(4 * cfg["emb_dim"], cfg["emb_dim"]),
+        )
+
+    def forward(self, x):
+        return self.layers(x)
+
+
 # An implementation of the GELU activation function
 class GELU(nn.Module):
     def __init__(self):

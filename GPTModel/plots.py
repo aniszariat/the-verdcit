@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from GELUactivation import GELU
+from activationFunction import GELU
 
 gelu, relu = GELU(), nn.ReLU()
 # Creates 100 sample data points in the range –3 to 3
