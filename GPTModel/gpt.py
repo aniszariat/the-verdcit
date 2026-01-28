@@ -23,7 +23,7 @@ txt2 = "Every day holds a"
 batch.append(torch.tensor(tokenizer.encode(txt1)))
 batch.append(torch.tensor(tokenizer.encode(txt2)))
 batch = torch.stack(batch, dim=0)
-print(batch)
+print("batch:\n",batch)
 
 # we initialize a new 124-million-parameter DummyGPTModel instance and feed it the tokenized batch:
 """ 
@@ -64,5 +64,5 @@ ln = LayerNorm(emb_dim=5)
 out_ln = ln(batch_example)
 mean = out_ln.mean(dim=-1, keepdim=True)
 var = out_ln.var(dim=-1, unbiased=False, keepdim=True)
-print("Mean:\n", mean)
-print("Variance:\n", var)
+print("Mean:\n",mean)
+print("Variance:\n",var)
