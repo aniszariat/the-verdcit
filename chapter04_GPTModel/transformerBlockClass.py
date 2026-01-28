@@ -1,5 +1,9 @@
+import torch.nn as nn
+
 # The transformer block component of GPT
-from chapter03 import MultiHeadAttention
+from chapter03_attentionMechanism.multiHeadAttentionClass import MultiHeadAttention
+from feedForwardNetwork import FeedForward
+from layerNormalizationClass import LayerNorm
 
 
 class TransformerBlock(nn.Module):
