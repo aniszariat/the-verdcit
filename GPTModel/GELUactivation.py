@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 
 # An implementation of the GELU activation function
 class GELU(nn.Module):
