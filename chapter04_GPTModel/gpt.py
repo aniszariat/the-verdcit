@@ -67,6 +67,7 @@ print("Variance:\n",var)
 torch.manual_seed(123)
 model = GPTModel(GPT_CONFIG_124M)
 out = model(batch)
+"""  
 print("Input batch:\n", batch)
 print("\nOutput shape:", out.shape)
 print(out)
@@ -86,8 +87,36 @@ print(
 )
 
 # let’s compute the memory requirements of the 163 million parameters in our GPTModel object
-#1 Calculates the total size in bytes (assuming float32, 4 bytes per parameter)
+# 1 Calculates the total size in bytes (assuming float32, 4 bytes per parameter)
 total_size_bytes = total_params * 4
-#2 Converts to megabytes
+# 2 Converts to megabytes
 total_size_mb = total_size_bytes / (1024 * 1024)
 print(f"Total size of the model: {total_size_mb:.2f} MB")
+"""
+
+
+# A function for the GPT model to generate text
+def generate_text_simple(model, idx, max_new_tokens, context_size):
+    # idx is a (batch, n_tokens) array of indices in the current context.
+    for _ in range(max_new_tokens):
+        # Crops current context if it exceeds the supported context size, e.g., if LLM supports only 5 tokens, and the context size is 10, then only the last 5 tokens are used as context
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+        # Focuses only on the last time step, so that (batch, n_token, vocab_size) becomes (batch, vocab_size)
+        logits = logits[:, -1, :]
+        # probas has shape (batch, vocab_size).
+        probas = torch.softmax(logits, dim=-1)
+        # idx_next has shape (batch, 1).
+        idx_next = torch.argmax(probas, dim=-1, keepdim=True)
+        # Appends sampled index to the running sequence, where idx has shape (batch, n_tokens+1)
+        idx = torch.cat((idx, idx_next), dim=1)
+
+    return idx
+
+
+start_context = "Hello, I am"
+encoded = tokenizer.encode(start_context)
+print("encoded:", encoded)
+encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+print("encoded_tensor.shape:", encoded_tensor.shape)
