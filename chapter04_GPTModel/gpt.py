@@ -118,5 +118,19 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
 start_context = "Hello, I am"
 encoded = tokenizer.encode(start_context)
 print("encoded:", encoded)
-encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+encoded_tensor = torch.tensor(encoded).unsqueeze(0)  # Adds batch dimension
 print("encoded_tensor.shape:", encoded_tensor.shape)
+# Disables dropout since we are not training the model
+model.eval()
+out = generate_text_simple(
+    model=model,
+    idx=encoded_tensor,
+    max_new_tokens=6,
+    context_size=GPT_CONFIG_124M["context_length"],
+)
+print("Output:", out)
+print("Output length:", len(out[0]))
+
+# we convert the IDs back into text:
+decoded_text = tokenizer.decode(out.squeeze(0).tolist())
+print(decoded_text)
