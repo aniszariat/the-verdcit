@@ -58,3 +58,41 @@ theVerdict/
 ├── README.md
 └── .gitignore
 ```
+
+
+---
+
+## ⚙️ How It Works
+
+### 1. Data Preparation
+- Clean and preprocess raw text
+- Convert text into tokens
+- Build input-target sequences for training
+
+### 2. Transformer Model
+- Token embeddings + positional encoding
+- Multi-head self-attention
+- Feed-forward neural networks
+- Stacked transformer blocks
+
+### 3. Pretraining
+- Train on a general corpus
+- Objective: **next-token prediction**
+- Optimization via backpropagation
+
+### 4. Fine-Tuning
+- Adapt model to specific tasks:
+  - Text classification
+  - Domain-specific generation
+
+### 5. Inference
+- Generate text from prompts
+- Control output using sampling strategies (e.g., temperature)
+
+---
+
+## 🧪 Usage
+
+### Install dependencies
+```bash
+pip install -r requirements.txt
